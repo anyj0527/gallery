@@ -29,6 +29,8 @@ playServicesTfliteGpu= "16.4.0"
 cameraX = "1.4.2"
 netOpenidAppauth = "0.11.1"
 splashscreen = "1.2.0-beta01"
+mockitoCore = "5.11.0"
+kotlinxCoroutinesTest = "1.8.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -67,6 +69,8 @@ camerax-view = { group = "androidx.camera", name = "camera-view", version.ref = 
 openid-appauth = { group = "net.openid", name = "appauth", version.ref = "netOpenidAppauth" }
 androidx-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashscreen" }
 protobuf-javalite = { group = "com.google.protobuf", name = "protobuf-javalite", version.ref = "protobufJavaLite" }
+mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockitoCore" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutinesTest" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
