@@ -16,7 +16,12 @@
         "maxTokens": 4096,
         "accelerators": "cpu,gpu"
       },
-      "taskTypes": ["llm_chat", "llm_prompt_lab", "llm_ask_image"]
+      "taskTypes": [
+        "llm_chat",
+        "llm_prompt_lab",
+        "llm_ask_image"
+      ],
+      "runtimeType": "LITE_RT"
     },
     {
       "name": "Gemma-3n-E4B-it-int4",
@@ -34,7 +39,12 @@
         "maxTokens": 4096,
         "accelerators": "cpu,gpu"
       },
-      "taskTypes": ["llm_chat", "llm_prompt_lab", "llm_ask_image"]
+      "taskTypes": [
+        "llm_chat",
+        "llm_prompt_lab",
+        "llm_ask_image"
+      ],
+      "runtimeType": "LITE_RT"
     },
     {
       "name": "Gemma3-1B-IT q4",
@@ -51,7 +61,11 @@
         "maxTokens": 1024,
         "accelerators": "gpu,cpu"
       },
-      "taskTypes": ["llm_chat", "llm_prompt_lab"]
+      "taskTypes": [
+        "llm_chat",
+        "llm_prompt_lab"
+      ],
+      "runtimeType": "LITE_RT"
     },
     {
       "name": "Qwen2.5-1.5B-Instruct q8",
@@ -68,7 +82,47 @@
         "maxTokens": 1024,
         "accelerators": "cpu"
       },
-      "taskTypes": ["llm_chat", "llm_prompt_lab"]
+      "taskTypes": [
+        "llm_chat",
+        "llm_prompt_lab"
+      ],
+      "runtimeType": "LITE_RT"
+    },
+    {
+      "id": "dummy-llm-model",
+      "name": "Dummy LLM (Echo)",
+      "description": "A dummy LLM that echoes back the input. Useful for testing UI and flow.",
+      "taskIds": [
+        "llm_chat",
+        "llm_ask_image"
+      ],
+      "url": "https://example.com/dummy-model",
+      "delegate": "CPU",
+      "defaultAccelerator": "CPU",
+      "runtimeType": "DUMMY",
+      "llmSupportImage": false,
+      "configs": [
+        {
+          "id": "MAX_TOKENS",
+          "value": 1024,
+          "type": "integer"
+        },
+        {
+          "id": "TEMPERATURE",
+          "value": 0.7,
+          "type": "float"
+        },
+        {
+          "id": "TOPK",
+          "value": 1,
+          "type": "integer"
+        },
+        {
+          "id": "TOPP",
+          "value": 1.0,
+          "type": "float"
+        }
+      ]
     }
   ]
 }

@@ -102,6 +102,8 @@ data class Model(
 
   /** The estimated peak memory in byte to run the model. */
   val estimatedPeakMemoryInBytes: Long? = null,
+  /** The runtime type for this model, defaults to LITE_RT */
+  val runtimeType: RuntimeType = RuntimeType.LITE_RT,
 ) {
   init {
     normalizedName = NORMALIZE_NAME_REGEX.replace(name, "_")

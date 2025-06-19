@@ -25,6 +25,7 @@ import com.google.ai.edge.gallery.data.Model
 import com.google.ai.edge.gallery.data.TASK_LLM_ASK_IMAGE
 import com.google.ai.edge.gallery.data.TASK_LLM_CHAT
 import com.google.ai.edge.gallery.data.Task
+// Potential LlmModelInstance import removed here if present.
 import com.google.ai.edge.gallery.ui.common.chat.ChatMessageBenchmarkLlmResult
 import com.google.ai.edge.gallery.ui.common.chat.ChatMessageLoading
 import com.google.ai.edge.gallery.ui.common.chat.ChatMessageText
@@ -68,9 +69,7 @@ open class LlmChatViewModel(curTask: Task = TASK_LLM_CHAT) : ChatViewModel(task 
       }
       delay(500)
 
-      // Run inference.
-      val instance = model.instance as LlmModelInstance
-      var prefillTokens = instance.session.sizeInTokens(input)
+      var prefillTokens = LlmChatModelHelper.sizeInTokens(model, input)
       prefillTokens += images.size * 257
 
       var firstRun = true
@@ -82,7 +81,7 @@ open class LlmChatViewModel(curTask: Task = TASK_LLM_CHAT) : ChatViewModel(task 
       val start = System.currentTimeMillis()
 
       try {
-        LlmChatModelHelper.runInference(
+        LlmChatModelHelper.generateResponse(
           model = model,
           input = input,
           images = images,
@@ -92,7 +91,7 @@ open class LlmChatViewModel(curTask: Task = TASK_LLM_CHAT) : ChatViewModel(task 
             if (firstRun) {
               firstTokenTs = System.currentTimeMillis()
               timeToFirstToken = (firstTokenTs - start) / 1000f
-              prefillSpeed = prefillTokens / timeToFirstToken
+              prefillSpeed = if (timeToFirstToken > 0) prefillTokens / timeToFirstToken else 0f
               firstRun = false
               setPreparing(false)
             } else {
@@ -124,15 +123,17 @@ open class LlmChatViewModel(curTask: Task = TASK_LLM_CHAT) : ChatViewModel(task 
             if (done) {
               setInProgress(false)
 
-              decodeSpeed = decodeTokens / ((curTs - firstTokenTs) / 1000f)
+              val decodeDuration = (curTs - firstTokenTs) / 1000f
+              decodeSpeed = if (decodeDuration > 0) decodeTokens / decodeDuration else 0f
               if (decodeSpeed.isNaN()) {
                 decodeSpeed = 0f
               }
 
-              if (lastMessage is ChatMessageText) {
-                updateLastTextMessageLlmBenchmarkResult(
-                  model = model,
-                  llmBenchmarkResult =
+              val finalMessage = getLastMessage(model = model)
+              if (finalMessage is ChatMessageText) {
+                 updateLastTextMessageLlmBenchmarkResult(
+                    model = model,
+                    llmBenchmarkResult =
                     ChatMessageBenchmarkLlmResult(
                       orderedStats = STATS,
                       statValues =
@@ -171,8 +172,7 @@ open class LlmChatViewModel(curTask: Task = TASK_LLM_CHAT) : ChatViewModel(task 
     }
     viewModelScope.launch(Dispatchers.Default) {
       setInProgress(false)
-      val instance = model.instance as LlmModelInstance
-      instance.session.cancelGenerateResponseAsync()
+      LlmChatModelHelper.cancelGenerateResponse(model)
     }
   }
 
